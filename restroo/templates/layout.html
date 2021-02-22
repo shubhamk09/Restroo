@@ -34,13 +34,25 @@
             </div>
             <!-- Navbar Right Side -->
             <div class="navbar-nav">
-              {% if current_user.is_authenticated %}
+            {% if current_user.role=='restaurant' %}
+                {% if current_user.is_authenticated %}
+                    <a class="nav-item nav-link" href="{{ url_for('new_post') }}">New Post</a>
+                    <a class="nav-item nav-link" href="">New Photos</a>
                 <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
                 <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-              {% else %}
+                {% else %}
                 <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
                 <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
               {% endif %}
+            {% else %}
+                {% if current_user.is_authenticated %}
+                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
+            {% endif %}
             </div>
           </div>
         </div>
