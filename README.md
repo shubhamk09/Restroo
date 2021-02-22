@@ -1,2 +1,2 @@
 # Restroo
- Online Restaurant connect and review app
+ Online Restaurant connect and review website
