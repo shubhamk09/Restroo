@@ -86,3 +86,8 @@ a.article-title:hover {
 .radioBtn {
   margin-bottom: 60px;
 }
+#wide-div {
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  border: 2px solid green;
+}

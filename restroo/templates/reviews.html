@@ -1,0 +1,44 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for review in reviews.items %}
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + review.reviewer.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="{{ url_for('user_posts', username=review.reviewer.username)}}">{{ review.reviewer.username }}</a>
+              <small class="text-muted">{{ review.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+            <h2><a class="article-title" href="{{ url_for('review', review_id=review.id) }}">{{ review.title }}</a></h2>
+
+            <p class="article-content">{{ review.content }}</p>
+              <div>
+            </div>
+              {% if current_user.role=='restaurant' and current_user.id==rest_id%}
+              <div style="position: relative">
+                    <p class="article-content">Positivity of the content is: {{ review.sentiment }}</p>
+              </div>
+              {% endif %}
+          </div>
+
+
+        </article>
+
+    {% endfor %}
+
+    {% if current_user.role=='customer' %}
+            <a href="{{ url_for('new_review', rest_id=rest_id) }}"><button type="button" class="btn btn-secondary btn-lg btn-block">Add Review</button></a>
+    {% endif %}
+    <br/>
+    {% for page_num in reviews.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if reviews.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('reviews', page=page_num, rest_id=rest_id) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('reviews', page=page_num, rest_id=rest_id) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+
+{% endblock content %}

@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block content %}
 
-        <article class="media content-section">
+        <article class="media content-section" style="width: 100%;">
         <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">
           <div class="media-body">
             <div class="article-metadata">
@@ -14,11 +14,18 @@
                     </div>
                 {% endif %}
             </div>
+
+
             <h2 class="article-title">{{ post.title }}</h2>
               <h6 style="float: right"><a class="article-title" href="#">{{ post.category }}</a></h6>
             <p class="article-content">{{ post.content }}</p>
           </div>
+
         </article>
+        {% if current_user.role=='customer' %}
+        <a href="{{ url_for('new_review', rest_id=post.author.id) }}"><button type="button" class="btn btn-secondary btn-lg btn-block">Add Review</button></a>
+        {% endif %}
+
 
         <!-- Modal -->
         <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -39,5 +46,7 @@
             </div>
           </div>
         </div>
+
+
 
 {% endblock content %}

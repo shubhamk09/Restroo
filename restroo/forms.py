@@ -70,3 +70,9 @@ class PostForm(FlaskForm):
     catt = ['Fundraising', 'Festivals', 'Community Events', 'Social Events', 'Virtual Event', 'Corporate Events']
     category = SelectField('Category', choices=catt, validators=[DataRequired()])
     submit = SubmitField('Post')
+
+
+class ReviewForm(FlaskForm) :
+    title = StringField('Title', validators=[DataRequired()])
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Post')

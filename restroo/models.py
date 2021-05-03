@@ -94,7 +94,7 @@ class Review(db.Model):
     cust_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     reviewer = db.relationship('User', back_populates='reviewed_by', foreign_keys='Review.cust_id')
-    reviewplace = db.relationship('User', back_populates='reviewed_at', foreign_keys='Review.cust_id')
+    reviewplace = db.relationship('User', back_populates='reviewed_at', foreign_keys='Review.rest_id')
 
     def __repr__(self):
         return f"Post('{self.title}', '{self.date_posted}')"

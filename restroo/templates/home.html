@@ -9,9 +9,20 @@
               <small class="text-muted">{{ post.date_posted.strftime('%Y-%m-%d') }}</small>
             </div>
             <h2><a class="article-title" href="{{ url_for('post', post_id=post.id) }}">{{ post.title }}</a></h2>
-              <h6 style="float: right"><a class="article-title" href="#">{{ post.category }}</a></h6>
+
             <p class="article-content">{{ post.content }}</p>
+              <div>
+                <div style="position: relative">
+                    <a href="{{ url_for('reviews', rest_id=post.author.id) }}"><button type="button" class="btn btn-outline-dark">Restaurant reviews</button></a>
+                </div>
+                <div style="position: relative">
+                   <h6 style="float: right"><a class="article-title" href="#">{{ post.category }}</a></h6>
+                </div>
+
+              </div>
           </div>
+
+
         </article>
     {% endfor %}
     {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
