@@ -1,0 +1,65 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for booking in bookings.items %}
+        <article class="media content-section">
+        <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + booking.booker.image_file) }}">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="">{{ booking.booker.username }}</a>
+              <small class="text-muted">{{ booking.date_posted.strftime('%Y-%m-%d') }}</small>
+            </div>
+              {% if booking.bookplace == current_user %}
+                    <div>
+                    <button type="button" class="btn btn-danger btn-sm m-1" data-toggle="modal" data-target="#deleteModal">Cancel Booking</button>
+                    </div>
+                {% endif %}
+            <h2><a class="article-title" href="">{{ booking.number_of_table }}</a></h2>
+            <h2>At <a class="article-title" href="">{{ booking.bookplace.username }}</a></h2>
+
+              <div>
+            </div>
+          </div>
+
+
+        </article>
+
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="deleteModalLabel">Cancel this booking?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <form action="{{ url_for('delete_bookings', book_id=booking.id) }}" method="post">
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+    {% endfor %}
+
+    {% if current_user.role=='customer' %}
+            <a href=""><button type="button" class="btn btn-secondary btn-lg btn-block">Book a table</button></a>
+    {% endif %}
+    <br/>
+    {% for page_num in bookings.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if bookings.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('bookings', page=page_num, rest_id=rest_id) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('bookings', page=page_num, rest_id=rest_id) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+
+    {% endfor %}
+
+{% endblock content %}

@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+        <form method="POST" action="">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <div class="form-group">
+                    <h2>Available number of tables: {{ available }}</h2>
+                </div>
+                <div class="form-group">
+                    {{ form.number_of_table.label(class="form-control-label") }}
+                    {% if form.number_of_table.errors %}
+                        {{ form.number_of_table(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.number_of_table.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.number_of_table(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+{% endblock content %}

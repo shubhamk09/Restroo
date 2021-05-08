@@ -18,6 +18,7 @@ class RegistrationForm(FlaskForm):
     confirm_password = PasswordField('Confirm Password',
                                      validators=[DataRequired(), EqualTo('password')])
     role = RadioField('Restaurant or Customer', choices=[('customer', 'Customer'), ('restaurant', 'Restaurant')])
+    table = StringField('Number of tables available')
     submit = SubmitField('Sign Up')
 
     def validate_username(self, username):
@@ -76,3 +77,9 @@ class ReviewForm(FlaskForm) :
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+
+class BookingForm(FlaskForm):
+    number_of_table = StringField('Number of Tables you want to book', validators=[DataRequired()])
+    submit = SubmitField('Book')
+

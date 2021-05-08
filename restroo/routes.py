@@ -4,8 +4,8 @@ from nltk.corpus import stopwords
 from nltk.sentiment import SentimentIntensityAnalyzer
 
 from restroo import app, db, bcrypt
-from restroo.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, ReviewForm
-from restroo.models import User, Post, Review
+from restroo.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, ReviewForm, BookingForm
+from restroo.models import User, Post, Review, Booking, Tables
 from flask_login import login_user, current_user, logout_user, login_required
 import secrets
 import os
@@ -37,10 +37,16 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         hashed_password = bcrypt.generate_password_hash(form.password.data).decode('utf-8')
+        print(form.table.data)
         user = User(name=form.name.data, username=form.username.data, address=form.address.data,
                     email=form.email.data, password=hashed_password, contact=form.contact.data, role=form.role.data)
         db.session.add(user)
         db.session.commit()
+        if form.role.data == "restaurant":
+            user = User.query.filter_by(username=form.username.data).first_or_404()
+            table = Tables(total=form.table.data, available=form.table.data, rest_id=user.id)
+            db.session.add(table)
+            db.session.commit()
         flash('Your account has been created! You are now able to log in', 'success')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
@@ -241,3 +247,70 @@ def update_review(review_id):
         form.title.data = review.title
         form.content.data = review.content
     return render_template('create_review.html', title='Update Review', form=form, legend='Update Review')
+
+
+@app.route("/bookings/<int:rest_id>")
+@login_required
+def bookings(rest_id):
+    page = request.args.get('page', 1, type=int)
+    bookings = Booking.query.filter_by(rest_id=rest_id).order_by(Booking.date_posted.desc()).paginate(page=page,
+                                                                                                      per_page=5)
+    return render_template('bookings.html', bookings=bookings, rest_id=rest_id)
+
+
+@app.route("/bookings/new/<int:rest_id>", methods=['GET', 'POST'])
+@login_required
+def new_booking(rest_id):
+    form = BookingForm()
+    rest = User.query.filter_by(id=rest_id).first_or_404()
+    available = rest.table[0]
+    string = str(available)
+    string = string.replace("'", "")
+    tables = [int(x) for x in string.split(",")]
+    if form.validate_on_submit():
+
+        if tables[0] >= tables[1]:
+            flash('No table available', 'error')
+            return redirect(url_for('home'))
+        elif int(form.number_of_table.data) > tables[0]:
+            flash('Number of tables you requested is not available', 'error')
+            return redirect(url_for('home'))
+        else:
+            booking = Booking(number_of_table=form.number_of_table.data, booker=current_user, bookplace=rest)
+            db.session.add(booking)
+            db.session.commit()
+            decrement_table(tables[3])
+            flash('Your table has been booked!', 'success')
+            return redirect(url_for('home'))
+    return render_template('new_booking.html', title='Bookings', form=form, legend='Bookings', available=tables[0])
+
+
+def decrement_table(id):
+    db.session.query(Tables).filter(Tables.id == id).update({Tables.available: Tables.available - 1},
+                                                            synchronize_session=False)
+    db.session.commit()
+
+
+def increment_table(id):
+    db.session.query(Tables).filter(Tables.id == id).update({Tables.available: Tables.available + 1},
+                                                            synchronize_session=False)
+    db.session.commit()
+
+
+@app.route("/bookings/<int:book_id>/delete", methods=['POST'])
+@login_required
+def delete_bookings(book_id):
+    bookings = Booking.query.get_or_404(book_id)
+    available = bookings.bookplace.table[0]
+    string = str(available)
+    string = string.replace("'", "")
+    tables = [int(x) for x in string.split(",")]
+    tid = tables[3]
+    print(tid)
+    if bookings.bookplace != current_user:
+        abort(403)
+    db.session.delete(bookings)
+    db.session.commit()
+    increment_table(tid)
+    flash('The booking cancelled successfully!', 'success')
+    return redirect(url_for('home'))

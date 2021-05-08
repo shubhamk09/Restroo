@@ -104,6 +104,26 @@
                 {{ form.role.label(class="form-check-label") }}
                 {{ form.role(class="form-check-input") }}
             </div>
+            <br/>
+                <div class="alert alert-warning">
+                    <strong>Warning!</strong> Use this button only if you are registering yourself as Restaurant.
+                </div>
+                <div class="form-group" id="hidden-me" style="display: none">
+                    {{ form.table.label(class="form-control-label") }}
+                    {% if form.table.errors %}
+                        {{ form.table(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.table.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.table(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group" style="margin-bottom: 60px">
+                    <button type="button" class="btn btn-success" onclick="creatediv()">Enter total number of tables</button>
+                </div>
             </fieldset>
             <div class="form-group">
                 {{ form.submit(class="btn btn-outline-info") }}

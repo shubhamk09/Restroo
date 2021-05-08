@@ -56,7 +56,7 @@ class Tables(db.Model):
     rest_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
+        return f"'{self.available}','{self.total}','{self.rest_id}','{self.id}'"
 
 
 class Media(db.Model):
@@ -67,7 +67,7 @@ class Media(db.Model):
     rest_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
+        return f"Media('{self.title}', '{self.date_posted}')"
 
 
 class Booking(db.Model):
@@ -81,7 +81,7 @@ class Booking(db.Model):
     bookplace = db.relationship('User', back_populates='reserves', foreign_keys='Booking.rest_id')
 
     def __repr__(self):
-        return f"Post('{self.number_of_table}', '{self.date_posted}')"
+        return f"Booking('{self.number_of_table}', '{self.date_posted}')"
 
 
 class Review(db.Model):
@@ -97,4 +97,4 @@ class Review(db.Model):
     reviewplace = db.relationship('User', back_populates='reviewed_at', foreign_keys='Review.rest_id')
 
     def __repr__(self):
-        return f"Post('{self.title}', '{self.date_posted}')"
+        return f"Review('{self.title}', '{self.date_posted}')"

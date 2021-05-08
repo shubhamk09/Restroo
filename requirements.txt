@@ -27,3 +27,5 @@ Werkzeug==1.0.1
 wrapt==1.12.1
 WTForm==1.0
 WTForms==2.3.3
+
+nltk~=3.6.1

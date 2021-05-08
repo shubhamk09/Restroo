@@ -11,6 +11,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='main.js') }}"></script>
 
     {% if title %}
         <title>Restroo - {{ title }}</title>
@@ -33,34 +34,48 @@
               <a class="nav-item nav-link" href="{{ url_for('about') }}">About</a>
             </div>
             <!-- Navbar Right Side -->
-            <div class="navbar-nav">
-            {% if current_user.role=='restaurant' %}
-                {% if current_user.is_authenticated %}
-                    <a class="nav-item nav-link" href="{{ url_for('new_post') }}">New Post</a>
-                    <a class="nav-item nav-link" href="">New Photos</a>
-                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
-                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-                {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
-              {% endif %}
-            {% else %}
-                {% if current_user.is_authenticated %}
-                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
-                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
-                {% else %}
-                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
-                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
-              {% endif %}
+          {% if current_user.is_authenticated %}
+
             {% endif %}
+                {% if current_user.is_authenticated %}
+                            <div class="navbar-nav">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Options
+                    </a>
+                    {% if current_user.role=='restaurant' %}
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="{{ url_for('new_post') }}">New Post</a>
+                        <a class="dropdown-item" href="#">New Photos</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{{ url_for('post', post_id=current_user.id) }}">Posts</a>
+                        <a class="dropdown-item" href="{{ url_for('reviews', rest_id=current_user.id) }}">Reviews</a>
+                        <a class="dropdown-item" href="{{ url_for('bookings', rest_id=current_user.id) }}">Bookings</a>
+                        <a class="dropdown-item" href="#">Media</a>
+                    </div>
+                    {% endif %}
+                    {% if current_user.role=='customer' %}
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">My Reviews</a>
+                        <a class="dropdown-item" href="#">My Bookings</a>
+                    </div>
+                    {% endif %}
+
+                </li>
+                <a class="nav-item nav-link" href="{{ url_for('account') }}">Account</a>
+                <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
+                {% else %}
+                <a class="nav-item nav-link" href="{{ url_for('login') }}">Login</a>
+                <a class="nav-item nav-link" href="{{ url_for('register') }}">Register</a>
+              {% endif %}
             </div>
           </div>
         </div>
       </nav>
     </header>
     <main role="main" class="container">
-      <div style="" class="row">
-        <div class="col-md-8" >
+      <div style="width: 100%" class="row">
+        <div class="col-md-12" >
           {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
               {% for category, message in messages %}
@@ -73,19 +88,19 @@
           {% block content %}{% endblock %}
 
         </div>
-         <div class="col-md-4">
-          <div class="content-section">
-            <h3>Our Sidebar</h3>
-            <p class='text-muted'>You can put any information here you'd like.
-              <ul class="list-group">
-                <li class="list-group-item list-group-item-light">Latest Posts</li>
-                <li class="list-group-item list-group-item-light">Announcements</li>
-                <li class="list-group-item list-group-item-light">Calendars</li>
-                <li class="list-group-item list-group-item-light">etc</li>
-              </ul>
-            </p>
-          </div>
-        </div>
+{#         <div class="col-md-4">#}
+{#          <div class="content-section">#}
+{#            <h3>Our Sidebar</h3>#}
+{#            <p class='text-muted'>You can put any information here you'd like.#}
+{#              <ul class="list-group">#}
+{#                <li class="list-group-item list-group-item-light">Latest Posts</li>#}
+{#                <li class="list-group-item list-group-item-light">Announcements</li>#}
+{#                <li class="list-group-item list-group-item-light">Calendars</li>#}
+{#                <li class="list-group-item list-group-item-light">etc</li>#}
+{#              </ul>#}
+{#            </p>#}
+{#          </div>#}
+{#        </div>#}
       </div>
     </main>
 

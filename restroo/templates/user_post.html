@@ -17,7 +17,7 @@
     {% endfor %}
 
     {% if current_user.role=='customer' %}
-            <a href=""><button type="button" class="btn btn-secondary btn-lg btn-block">Book a table</button></a>
+            <a href="{{ url_for('new_booking', rest_id=user.id) }}"><button type="button" class="btn btn-secondary btn-lg btn-block">Book a table</button></a>
     {% endif %}
     <br/>
 
