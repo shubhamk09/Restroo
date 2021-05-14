@@ -51,7 +51,7 @@
                         <a class="dropdown-item" href="{{ url_for('post', post_id=current_user.id) }}">Posts</a>
                         <a class="dropdown-item" href="{{ url_for('reviews', rest_id=current_user.id) }}">Reviews</a>
                         <a class="dropdown-item" href="{{ url_for('bookings', rest_id=current_user.id) }}">Bookings</a>
-                        <a class="dropdown-item" href="#">Media</a>
+                        <a class="dropdown-item" href="{{ url_for('user_medias', id=current_user.id) }}">Media</a>
                     </div>
                     {% endif %}
                     {% if current_user.role=='customer' %}

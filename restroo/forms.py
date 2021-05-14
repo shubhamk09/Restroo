@@ -1,6 +1,7 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, TextAreaField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, RadioField, TextAreaField, SelectField, \
+    MultipleFileField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from restroo.models import User
 from flask_login import current_user
@@ -73,7 +74,7 @@ class PostForm(FlaskForm):
     submit = SubmitField('Post')
 
 
-class ReviewForm(FlaskForm) :
+class ReviewForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     content = TextAreaField('Content', validators=[DataRequired()])
     submit = SubmitField('Post')
@@ -83,3 +84,9 @@ class BookingForm(FlaskForm):
     number_of_table = StringField('Number of Tables you want to book', validators=[DataRequired()])
     submit = SubmitField('Book')
 
+
+class MediaForm(FlaskForm):
+    title = StringField('Title', validators=[DataRequired()])
+    media = FileField('Update profile picture',render_kw={'multiple': True})
+    content = TextAreaField('Content', validators=[DataRequired()])
+    submit = SubmitField('Add')

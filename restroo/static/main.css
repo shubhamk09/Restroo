@@ -91,3 +91,7 @@ a.article-title:hover {
   margin-left: calc(-50vw + 50%);
   border: 2px solid green;
 }
+.card-sec{
+  height: 600px;;
+  width: 600px;
+}

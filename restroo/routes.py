@@ -2,10 +2,11 @@ import nltk as nltk
 from flask import render_template, url_for, flash, redirect, request, abort
 from nltk.corpus import stopwords
 from nltk.sentiment import SentimentIntensityAnalyzer
+from werkzeug.utils import secure_filename
 
 from restroo import app, db, bcrypt
-from restroo.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, ReviewForm, BookingForm
-from restroo.models import User, Post, Review, Booking, Tables
+from restroo.forms import RegistrationForm, LoginForm, UpdateAccountForm, PostForm, ReviewForm, BookingForm, MediaForm
+from restroo.models import User, Post, Review, Booking, Tables, Media
 from flask_login import login_user, current_user, logout_user, login_required
 import secrets
 import os
@@ -314,3 +315,43 @@ def delete_bookings(book_id):
     increment_table(tid)
     flash('The booking cancelled successfully!', 'success')
     return redirect(url_for('home'))
+
+
+@app.route("/user_medias/<int:id>")
+def user_medias(id):
+    page = request.args.get('page', 1, type=int)
+    user = User.query.filter_by(id=id).first_or_404()
+    medias = Media.query.filter_by(rest_id=id).order_by(Media.date_posted.desc()).paginate(page=page, per_page=5)
+    return render_template('user_medias.html', medias=medias, user=user)
+
+
+def save_media(form_picture):
+    random_hex = secrets.token_hex(8)
+    _, f_ext = os.path.splitext(form_picture.filename)
+    picture_fn = random_hex + f_ext
+    picture_path = os.path.join(app.root_path, 'static/media_files', picture_fn)
+    output_size = (500, 500)
+    i = Image.open(form_picture)
+    i.thumbnail(output_size)
+    i.save(picture_path)
+    return picture_fn
+
+
+@app.route("/user_medias/new/<int:rest_id>", methods=['GET', 'POST'])
+@login_required
+def new_media(rest_id):
+    form = MediaForm()
+    if form.validate_on_submit():
+        if form.media.data:
+            file = request.files.get("media")
+            picture_file = save_media(file)
+            media = Media(title=form.title.data, image_file=picture_file, rest_id=rest_id, content=form.content.data)
+            db.session.add(media)
+            db.session.commit()
+            flash('Your Media have been Added!', 'success')
+        else:
+            flash('Your Media cannot be Added!', 'error')
+        return redirect(url_for('home'))
+    return render_template('create_media.html', title='New Media', form=form, legend='New Media')
+
+

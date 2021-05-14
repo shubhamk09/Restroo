@@ -1,6 +1,11 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1 class="mb-3" style="color: white">Post by {{ user.username }} ({{ posts.total }})</h1>
+    <h1 class="mb-3" style="color: white;">Post by {{ user.username }} ({{ posts.total }})
+        <span class="border border-warning rounded-right" style="align-self: flex-end">
+            <a class="article-title" style="color: white; text-align: right;" href="{{ url_for('user_medias', id=user.id) }}"> View Restaurant Media </a>
+        </span>
+    </h1>
+
     {% for post in posts.items %}
         <article class="media content-section">
         <img class="rounded-circle article-img" src="{{ url_for('static', filename='profile_pics/' + post.author.image_file) }}">

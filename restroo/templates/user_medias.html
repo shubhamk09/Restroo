@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% for media in medias.items %}
+        <article class="media content-section card-sec">
+            <div class="card" style="width: 16rem; margin-right: 5rem;">
+                <img class="card-img-top" src="{{ url_for('static', filename='media_files/' + media.image_file) }}" alt="Card image cap" style="height: 16rem; width:16rem;">
+            </div>
+            <div style="margin-top: 1rem; margin-left: 5rem;">
+                <p><h2>{{ media.title }}</h2></p>
+            </div>
+            <div style="margin-top: 1rem; margin-left: 5rem;">
+            <p ><h2>{{ media.content }}</h2></p>
+             </div>
+        </article>
+    {% endfor %}
+    {% if  current_user.role=='restaurant' and user == current_user%}
+        <a href="{{ url_for('new_media', rest_id=current_user.id) }}" style="margin-bottom: 1rem;"><button type="button" class="btn btn-secondary btn-lg btn-block">Add Media</button></a>
+    {% endif %}
+    {% for page_num in medias.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+            {% if medias.page == page_num %}
+                <a class="btn btn-info mb-4" href="{{ url_for('user_medias', id=user.id, page=page_num) }}">{{ page_num }}</a>
+            {% else %}
+                <a class="btn btn-outline-info mb-4" href="{{ url_for('user_medias', id=user.id, page=page_num) }}">{{ page_num }}</a>
+            {% endif %}
+        {% else %}
+            ...
+        {% endif %}
+    {% endfor %}
+{% endblock content %}
